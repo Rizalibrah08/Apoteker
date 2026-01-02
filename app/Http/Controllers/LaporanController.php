@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\User;
 
 class LaporanController extends Controller
 {
@@ -38,7 +39,7 @@ class LaporanController extends Controller
         $averageTransaksi = $totalTransaksi > 0 ? $totalPendapatan / $totalTransaksi : 0;
 
         // Fetch Users for Filter
-        $users = \App\Models\User::all();
+        $users = User::all();
 
         return view('backend.laporan.index', compact(
             'transactions',

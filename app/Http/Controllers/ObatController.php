@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Obat;
 
 class ObatController extends Controller
 {
     public function index(Request $request)
     {
-        $query = \App\Models\Obat::query();
+        $query = Obat::query();
 
         // Search
         if ($request->filled('search')) {
@@ -58,7 +59,7 @@ class ObatController extends Controller
             $input['gambar'] = "$profileImage";
         }
 
-        \App\Models\Obat::create($input);
+        Obat::create($input);
 
         return redirect()->route('obat.index')
             ->with('success', 'Obat berhasil ditambahkan.');
@@ -66,7 +67,7 @@ class ObatController extends Controller
 
     public function edit($id)
     {
-        $obat = \App\Models\Obat::find($id);
+        $obat = Obat::find($id);
         return view('backend.obat.edit', compact('obat'));
     }
 
@@ -85,7 +86,7 @@ class ObatController extends Controller
             'nama_obat.unique' => 'Nama obat ini sudah terdaftar!',
         ]);
 
-        $obat = \App\Models\Obat::find($id);
+        $obat = Obat::find($id);
         $input = $request->all();
 
         if ($image = $request->file('gambar')) {
@@ -105,7 +106,7 @@ class ObatController extends Controller
 
     public function destroy($id)
     {
-        \App\Models\Obat::find($id)->delete();
+        Obat::find($id)->delete();
         return redirect()->route('obat.index')
             ->with('success', 'Obat berhasil dihapus.');
     }
