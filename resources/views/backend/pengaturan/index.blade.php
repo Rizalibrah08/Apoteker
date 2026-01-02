@@ -123,7 +123,7 @@
 <body>
 
     <!-- Include Sidebar -->
-    @include('sidebar.index')
+    @include('backend.sidebar.index')
 
     <!-- Main Content -->
     <main class="main-content">
@@ -138,54 +138,56 @@
 
         <div class="settings-grid">
 
-            <!-- Left: Pharmacy Profile -->
-            <div class="settings-card">
-                <div class="settings-header">
-                    <h3>Profil Apotek</h3>
-                    <p>Informasi yang akan tampil pada struk belanja.</p>
+            @if(Auth::user()->role == 'admin')
+                <!-- Left: Pharmacy Profile -->
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h3>Profil Apotek</h3>
+                        <p>Informasi yang akan tampil pada struk belanja.</p>
+                    </div>
+
+                    <form>
+                        <div class="logo-preview-container">
+                            <img src="{{ asset('img/logo-zapotek.jpg') }}" alt="Logo" class="logo-preview">
+                            <div>
+                                <button type="button" class="btn-upload">Ganti Logo</button>
+                                <p style="margin-top: 5px; font-size: 0.75rem; color: var(--text-muted);">Format: JPG, PNG.
+                                    Max 2MB.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nama Apotek</label>
+                            <input type="text" class="form-control" value="Zapotek Pharmacy">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Alamat Lengkap</label>
+                            <textarea class="form-control" rows="3">Jl. Kesehatan No. 123, Jakarta Selatan</textarea>
+                        </div>
+
+                        <div class="form-group row" style="display: flex; gap: 1rem;">
+                            <div style="flex: 1;">
+                                <label>No. Telepon / WhatsApp</label>
+                                <input type="text" class="form-control" value="0812-3456-7890">
+                            </div>
+                            <div style="flex: 1;">
+                                <label>Pajak / PPN (%)</label>
+                                <input type="number" class="form-control" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Catatan Kaki Struk</label>
+                            <input type="text" class="form-control" value="Terima kasih, semoga lekas sembuh!">
+                        </div>
+
+                        <div style="text-align: right;">
+                            <button type="submit" class="btn-save">Simpan Perubahan</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form>
-                    <div class="logo-preview-container">
-                        <img src="{{ asset('img/logo-zapotek.jpg') }}" alt="Logo" class="logo-preview">
-                        <div>
-                            <button type="button" class="btn-upload">Ganti Logo</button>
-                            <p style="margin-top: 5px; font-size: 0.75rem; color: var(--text-muted);">Format: JPG, PNG.
-                                Max 2MB.</p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nama Apotek</label>
-                        <input type="text" class="form-control" value="Zapotek Pharmacy">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Alamat Lengkap</label>
-                        <textarea class="form-control" rows="3">Jl. Kesehatan No. 123, Jakarta Selatan</textarea>
-                    </div>
-
-                    <div class="form-group row" style="display: flex; gap: 1rem;">
-                        <div style="flex: 1;">
-                            <label>No. Telepon / WhatsApp</label>
-                            <input type="text" class="form-control" value="0812-3456-7890">
-                        </div>
-                        <div style="flex: 1;">
-                            <label>Pajak / PPN (%)</label>
-                            <input type="number" class="form-control" value="0">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Catatan Kaki Struk</label>
-                        <input type="text" class="form-control" value="Terima kasih, semoga lekas sembuh!">
-                    </div>
-
-                    <div style="text-align: right;">
-                        <button type="submit" class="btn-save">Simpan Perubahan</button>
-                    </div>
-                </form>
-            </div>
+            @endif
 
             <!-- Right: Account & Preferences -->
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
@@ -212,24 +214,26 @@
                     </form>
                 </div>
 
-                <!-- Printer/System Prefs -->
-                <div class="settings-card">
-                    <div class="settings-header">
-                        <h3>Preferensi Hardware</h3>
+                @if(Auth::user()->role == 'admin')
+                    <!-- Printer/System Prefs -->
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <h3>Preferensi Hardware</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>Printer Struk Utama</label>
+                            <select class="form-control">
+                                <option>Thermal Printer 58mm (USB)</option>
+                                <option>Thermal Printer 80mm (Network)</option>
+                                <option>Microsoft Print to PDF</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="autoPrint" checked style="width: 18px; height: 18px;">
+                            <label for="autoPrint" style="margin: 0;">Otomatis cetak struk setelah bayar</label>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Printer Struk Utama</label>
-                        <select class="form-control">
-                            <option>Thermal Printer 58mm (USB)</option>
-                            <option>Thermal Printer 80mm (Network)</option>
-                            <option>Microsoft Print to PDF</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="autoPrint" checked style="width: 18px; height: 18px;">
-                        <label for="autoPrint" style="margin: 0;">Otomatis cetak struk setelah bayar</label>
-                    </div>
-                </div>
+                @endif
             </div>
 
         </div>
