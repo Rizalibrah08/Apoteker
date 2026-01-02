@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Transaction;
+use App\Models\TransactionItem;
+use App\Models\Obat;
 
 class DashboardController extends Controller
 {
@@ -16,7 +19,7 @@ class DashboardController extends Controller
         $currentMonth = now()->month;
         $currentYear = now()->year;
 
-        $transactionQuery = \App\Models\Transaction::whereMonth('created_at', $currentMonth)
+        $transactionQuery = Transaction::whereMonth('created_at', $currentMonth)
             ->whereYear('created_at', $currentYear);
 
         // Filter for Staff
@@ -37,7 +40,7 @@ class DashboardController extends Controller
         // 2. Top Selling Products (Admin Only)
         $topProducts = [];
         if ($user->role == 'admin') {
-            $topProducts = \App\Models\TransactionItem::select('obat_id', \Illuminate\Support\Facades\DB::raw('SUM(qty) as total_qty'))
+            $topProducts = TransactionItem::select('obat_id', \Illuminate\Support\Facades\DB::raw('SUM(qty) as total_qty'))
                 ->whereHas('transaction', function ($q) use ($currentMonth, $currentYear) {
                     $q->whereMonth('created_at', $currentMonth)
                         ->whereYear('created_at', $currentYear);
@@ -57,14 +60,14 @@ class DashboardController extends Controller
             $thresholdDate = now()->addMonths(5);
 
             // Upcoming Expiry
-            $expiringSoon = \App\Models\Obat::where('expired_date', '<=', $thresholdDate)
+            $expiringSoon = Obat::where('expired_date', '<=', $thresholdDate)
                 ->where('expired_date', '>=', now())
                 ->orderBy('expired_date', 'asc')
                 ->limit(5)
                 ->get();
 
             // Already Expired
-            $alreadyExpired = \App\Models\Obat::where('expired_date', '<', now())
+            $alreadyExpired = Obat::where('expired_date', '<', now())
                 ->orderBy('expired_date', 'desc') // Most recently expired first
                 ->limit(5)
                 ->get();
@@ -73,7 +76,7 @@ class DashboardController extends Controller
         // 4. Recent Transactions (Staff Only)
         $recentTransactions = [];
         if ($user->role == 'staff') {
-            $recentTransactions = \App\Models\Transaction::where('user_id', $user->id)
+            $recentTransactions = Transaction::where('user_id', $user->id)
                 ->latest()
                 ->limit(5)
                 ->get();
